@@ -16,7 +16,7 @@
 ### 3rd Phase
 [ ] 2.x, multi channel room sound system
 
-## Fourth Phase
+### Fourth Phase
 [ ] Distributed, multi-server wifi p2p network -> more than one content servers providing content and synchronization
 
 
