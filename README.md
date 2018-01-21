@@ -2,11 +2,11 @@
 
 ## RoadMap
 ### MVP
-[*] Implement Service Discovery
-[-] Design UI
-[ ] enumerate music in host
-[ ] search for that file in clients.
-[ ] Implement TCP Server for syncing
+   [*] Implement Service Discovery
+   [-] Design UI
+   [ ] enumerate music in host
+   [ ] search for that file in clients.
+   [ ] Implement TCP Server for syncing
 
 ### 2nd Phase
 [ ] BLE syncing
