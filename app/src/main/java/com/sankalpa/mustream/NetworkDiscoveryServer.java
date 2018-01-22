@@ -43,12 +43,12 @@ public class NetworkDiscoveryServer implements Runnable {
 
                 String message = new String(packet.getData()).trim();
 
-                if (message.equals("DISCOVER_FUIFSERVER_REQUEST")) {
-                    byte[] sendData = "DISCOVER_FUIFSERVER_RESPONSE".getBytes();
+                if (message.equals("DISCOVER_MuSTEEAMSERVER_REQUEST")) {
+                    byte[] sendData = "DISCOVER_MuSTEEAMSERVER_RESPONSE".getBytes();
                     DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, packet.getAddress(), packet.getPort());
 
                     socket.send(sendPacket);
-                    System.out.println(getClass().getName() + ">>>Sent packet to: " + sendPacket.getAddress().getHostAddress());
+                    Log.d(TAG, "Sent packets to " + sendPacket.getAddress().getHostAddress());
                 }
             }
         } catch (UnknownHostException e) {

@@ -3,21 +3,15 @@ package com.sankalpa.mustream;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
-import android.os.PowerManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String LOGTAG = "lock";
-    private int SERVER_PORT = 1998;
-
     TextView textView;
 
     @Override
@@ -42,34 +36,8 @@ public class MainActivity extends AppCompatActivity {
         //wakeLock.acquire();
 
         new Thread(new NetworkDiscoveryServer(this)).start();
-        //new Thread(new NetworkDiscoveryClient()).start();
-        textView.setText("");
-    }
-    class ServerThread implements Runnable{
-        @Override
-        public void run() {
-            ServerSocket socket = null;
-            try{
-                socket = new ServerSocket(SERVER_PORT);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            while(!Thread.currentThread().isInterrupted()){
-                try{
-                    Socket s = socket.accept();
+        final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(2);
+        executor.schedule(new NetworkDiscoveryClient(), 1,TimeUnit.SECONDS );
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    class ClientThread implements Runnable{
-
-        @Override
-        public void run() {
-
-        }
     }
 }

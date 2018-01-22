@@ -20,13 +20,11 @@ public class NetworkDiscoveryClient implements Runnable {
     private static final String TAG = "com.sankalpa.mustream";
     @Override
     public void run() {
-
-
         DatagramSocket c;
         try{
             c = new DatagramSocket();
             c.setBroadcast(true);
-            byte[] sendData = "DISCOVER_FUIFSERVER_REQUEST".getBytes();
+            byte[] sendData = "DISCOVER_MuSTEEAMSERVER_REQUEST".getBytes();
 
             //Try the 255.255.255.255 first
             DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("0.0.0.0"), Constants.PORT_ADDRESS);
@@ -57,7 +55,7 @@ public class NetworkDiscoveryClient implements Runnable {
                 byte[] recvBuf = new byte[15000];
                 DatagramPacket receivePacket = new DatagramPacket(recvBuf, recvBuf.length);
                 c.receive(receivePacket);
-
+                Config.getInstance().setIpAddress(receivePacket.getAddress().getHostAddress());
                 Log.d(TAG, "Broadcast response from " + receivePacket.getAddress().getHostAddress());
             }
         } catch (SocketException e) {
