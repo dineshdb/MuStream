@@ -5,6 +5,7 @@ package com.sankalpa.mustream;
  */
 
 public class Config {
+    public static final int DISCOVERY_PORT_ADDRESS = 9863;
     private String ipAddress;
     private static Config instance = null;
 

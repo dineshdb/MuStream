@@ -31,7 +31,7 @@ public class NetworkDiscoveryServer implements Runnable {
         lock.acquire();
 
         try {
-            socket = new DatagramSocket(Constants.PORT_ADDRESS, InetAddress.getByName("0.0.0.0"));
+            socket = new DatagramSocket(Config.DISCOVERY_PORT_ADDRESS, InetAddress.getByName("0.0.0.0"));
             socket.setBroadcast(true);
 
             while (true) {

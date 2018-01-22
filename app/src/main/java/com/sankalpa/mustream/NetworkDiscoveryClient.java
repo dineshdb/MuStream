@@ -27,7 +27,7 @@ public class NetworkDiscoveryClient implements Runnable {
             byte[] sendData = "DISCOVER_MuSTEEAMSERVER_REQUEST".getBytes();
 
             //Try the 255.255.255.255 first
-            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("0.0.0.0"), Constants.PORT_ADDRESS);
+            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("0.0.0.0"), Config.DISCOVERY_PORT_ADDRESS);
             c.send(sendPacket);
 
             Enumeration interfaces = NetworkInterface.getNetworkInterfaces();
@@ -44,7 +44,7 @@ public class NetworkDiscoveryClient implements Runnable {
                     }
 
                     try {
-                        DatagramPacket sPacket = new DatagramPacket(sendData, sendData.length, broadcast, Constants.PORT_ADDRESS);
+                        DatagramPacket sPacket = new DatagramPacket(sendData, sendData.length, broadcast, Config.DISCOVERY_PORT_ADDRESS);
                         c.send(sPacket);
                     } catch (UnknownHostException e){
                     }
