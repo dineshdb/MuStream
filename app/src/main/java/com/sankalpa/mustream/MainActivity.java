@@ -1,10 +1,12 @@
 package com.sankalpa.mustream;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -12,6 +14,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
     TextView textView;
 
     @Override
@@ -39,5 +42,20 @@ public class MainActivity extends AppCompatActivity {
         final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(2);
         executor.schedule(new NetworkDiscoveryClient(), 1,TimeUnit.SECONDS );
 
+    }
+
+    public void speaker(View view) {
+        Intent intent = new Intent(this, Speaker.class);
+        startActivity(intent);
+    }
+
+    public void microphone(View view) {
+        Intent intent = new Intent(this, MicroPhone.class);
+        startActivity(intent);
+    }
+
+    public void mediaPlayer(View view) {
+        Intent intent = new Intent(this, MediaPlayer.class);
+        startActivity(intent);
     }
 }
