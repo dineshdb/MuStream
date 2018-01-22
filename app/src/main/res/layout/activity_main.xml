@@ -6,44 +6,79 @@
     android:layout_height="match_parent"
     tools:context="com.sankalpa.mustream.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        android:id="@+id/text_view"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButton2"
+        android:layout_width="112dp"
+        android:layout_height="99dp"
+        android:layout_marginBottom="192dp"
+        android:layout_marginTop="8dp"
+        android:onClick="speaker"
+        android:src="@drawable/ic_speaker"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.14"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="112dp"
+        android:layout_height="99dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="132dp"
+        android:layout_marginTop="60dp"
+        android:onClick="microphone"
+        android:src="@drawable/ic_microphone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@string/speaker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:onClick="speaker"
-        android:text="Speaker"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="260dp" />
 
-    <Button
-        android:id="@string/microphone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
-        android:onClick="microphone"
-        android:text="Microphone"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="260dp" />
-
-    <Button
-        android:id="@string/media"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="140dp"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButton3"
+        android:layout_width="112dp"
+        android:layout_height="99dp"
+        android:layout_marginBottom="180dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="8dp"
         android:onClick="mediaPlayer"
+        android:src="@drawable/ic_music"
         android:text="Media Player"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="260dp" />
+        app:layout_constraintVertical_bias="0.946" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="112dp"
+        android:text="Microphone"
+        app:layout_constraintHorizontal_bias="0.472"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/floatingActionButton" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="112dp"
+        android:text="Speaker"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/floatingActionButton2" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="60dp"
+        android:layout_marginTop="112dp"
+        android:text="Music"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/floatingActionButton3" />
 
 </android.support.constraint.ConstraintLayout>

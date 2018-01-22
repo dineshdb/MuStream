@@ -21,9 +21,4 @@ public class MediaPlayerActivity extends AppCompatActivity {
         this.player.start();
     }
 
-    @Override
-    protected void onDestroy(Bundle savedInstanceState){
-        this.player.interrupt();
-    }
-
 }
