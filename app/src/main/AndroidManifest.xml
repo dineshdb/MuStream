@@ -16,6 +16,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".Speaker"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".MicroPhone"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".MediaPlayer"
+            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>

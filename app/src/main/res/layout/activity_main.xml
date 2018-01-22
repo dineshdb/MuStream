@@ -9,10 +9,40 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:text="Hello To The World Of Speakers"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@string/speaker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:onClick="speaker"
+        android:text="Speaker"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="260dp" />
+
+    <Button
+        android:id="@string/microphone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:onClick="microphone"
+        android:text="Microphone"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="260dp" />
+
+    <Button
+        android:id="@string/media"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="140dp"
+        android:onClick="mediaPlayer"
+        android:text="Media Player"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="260dp" />
 
 </android.support.constraint.ConstraintLayout>
