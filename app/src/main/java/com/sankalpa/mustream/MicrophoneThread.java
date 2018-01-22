@@ -7,6 +7,6 @@ package com.sankalpa.mustream;
 public class MicrophoneThread implements Runnable {
     @Override
     public void run() {
-        
+
     }
 }
