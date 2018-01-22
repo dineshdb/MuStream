@@ -5,14 +5,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-public class MediaPlayer extends AppCompatActivity {
+public class MicroPhoneActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_media_player);
+        setContentView(R.layout.activity_micro_phone);
         Intent intent = getIntent();
-        String message=getResources().getString(R.string.media);
+        String message=getResources().getString(R.string.microphone);
         TextView textView = findViewById(R.id.textView);
         textView.setText(message);
     }

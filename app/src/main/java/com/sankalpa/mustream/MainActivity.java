@@ -37,25 +37,23 @@ public class MainActivity extends AppCompatActivity {
         //PowerManager powerManager =(PowerManager)this.getSystemService(Context.POWER_SERVICE);
         //PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, ""); // PARTIAL_WAKE_LOCK Only keeps CPU on
         //wakeLock.acquire();
-
-        new Thread(new NetworkDiscoveryServer(this)).start();
-        final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(2);
-        executor.schedule(new NetworkDiscoveryClient(), 1,TimeUnit.SECONDS );
-
     }
 
     public void speaker(View view) {
-        Intent intent = new Intent(this, Speaker.class);
+        Config.getInstance().setMode(Mode.SPEAKER);
+        Intent intent = new Intent(this, SpeakerActivity.class);
         startActivity(intent);
     }
 
     public void microphone(View view) {
-        Intent intent = new Intent(this, MicroPhone.class);
+        Config.getInstance().setMode(Mode.MICROPHONE);
+        Intent intent = new Intent(this, MicroPhoneActivity.class);
         startActivity(intent);
     }
 
     public void mediaPlayer(View view) {
-        Intent intent = new Intent(this, MediaPlayer.class);
+        Config.getInstance().setMode(Mode.MUSIC_PLAYER);
+        Intent intent = new Intent(this, MediaPlayerActivity.class);
         startActivity(intent);
     }
 }

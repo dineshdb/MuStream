@@ -24,13 +24,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Speaker"
+            android:name=".SpeakerActivity"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".MicroPhone"
+            android:name=".MicroPhoneActivity"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".MediaPlayer"
+            android:name=".MediaPlayerActivity"
             android:parentActivityName=".MainActivity" />
     </application>
 
