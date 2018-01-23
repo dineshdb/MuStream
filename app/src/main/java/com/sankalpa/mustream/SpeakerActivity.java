@@ -1,6 +1,7 @@
 package com.sankalpa.mustream;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -24,5 +25,8 @@ public class SpeakerActivity extends AppCompatActivity {
 //        executor.schedule(new NetworkDiscoveryClient(), 1, TimeUnit.SECONDS );
         this.thread = new Thread(new NetworkDiscoveryClient());
         this.thread.start();
+
+        MediaPlayer mp = new MediaPlayer();
+//        mp.setDataSource();
     }
 }

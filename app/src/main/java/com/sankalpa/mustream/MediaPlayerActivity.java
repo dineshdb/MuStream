@@ -20,5 +20,4 @@ public class MediaPlayerActivity extends AppCompatActivity {
         this.player = new Thread(new NetworkDiscoveryServer(this));
         this.player.start();
     }
-
 }
