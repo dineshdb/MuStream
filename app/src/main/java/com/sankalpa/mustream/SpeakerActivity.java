@@ -22,6 +22,7 @@ public class SpeakerActivity extends AppCompatActivity {
 
     Thread thread;
     RtspClient client;
+    String serverIp = "0.0.0.0";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,22 +32,32 @@ public class SpeakerActivity extends AppCompatActivity {
         TextView textView = findViewById(R.id.textView);
         textView.setText(message);
 
+/*
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(SpeakerActivity.this);
         Session session = SessionBuilder.getInstance()
                 .setAudioEncoder(SessionBuilder.AUDIO_AMRNB)
                 .setContext(getApplicationContext())
-                .setDestination("224.0.0.1")
                 .setVideoEncoder(SessionBuilder.VIDEO_NONE).build();
 
         client = new RtspClient();
         client.setSession(session);
+*/
 
 
 //        final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(2);
 //        executor.schedule(new NetworkDiscoveryClient(), 1, TimeUnit.SECONDS );
-        this.thread = new Thread(new NetworkDiscoveryClient());
-        this.thread.start();
+        //this.thread = new Thread(new NetworkDiscoveryClient());
+        //this.thread.start();
 
+    }
+
+    public void start(){
         MediaPlayer mp = new MediaPlayer();
+        try {
+            mp.setDataSource("rtsp://" + serverIp + ":" + Config.STREAM_PORT_ADDRESS + "/");
+            mp.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
