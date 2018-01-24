@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import net.majorkernelpanic.streaming.Session;
 import net.majorkernelpanic.streaming.SessionBuilder;
+import net.majorkernelpanic.streaming.audio.AudioQuality;
 import net.majorkernelpanic.streaming.rtsp.RtspServer;
 
 import java.net.InetAddress;
@@ -46,7 +47,8 @@ public class MicroPhoneActivity extends AppCompatActivity implements Session.Cal
                 .setCallback(this)
                 .setAudioEncoder(SessionBuilder.AUDIO_AAC)
                 .setContext(getApplicationContext())
-                //.setDestination("224.0.0.1")
+//                .setAudioQuality(AudioQuality.parseQuality("80kbps"))
+//                .setDestination("224.0.0.1")
                 .setVideoEncoder(SessionBuilder.VIDEO_NONE).build();
 
         // Starts the RTSP server
