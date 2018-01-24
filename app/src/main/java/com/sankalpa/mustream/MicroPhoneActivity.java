@@ -44,7 +44,7 @@ public class MicroPhoneActivity extends AppCompatActivity implements Session.Cal
         // Configures the SessionBuilder See this https://stackoverflow.com/questions/26405539/send-a-multicast-audio-in-rtsp-using-libstreaming-for-upstreaming-from-an-androi
         session = SessionBuilder.getInstance()
                 .setCallback(this)
-                .setAudioEncoder(SessionBuilder.AUDIO_AMRNB)
+                .setAudioEncoder(SessionBuilder.AUDIO_AAC)
                 .setContext(getApplicationContext())
                 //.setDestination("224.0.0.1")
                 .setVideoEncoder(SessionBuilder.VIDEO_NONE).build();

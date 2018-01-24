@@ -2,6 +2,7 @@ package com.sankalpa.mustream;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.preference.PreferenceManager;
@@ -20,7 +21,7 @@ import java.net.URL;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public class SpeakerActivity extends AppCompatActivity {
+public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
 
     Thread thread;
     RtspClient client;
@@ -56,8 +57,14 @@ public class SpeakerActivity extends AppCompatActivity {
     }
     public void play(View view) {
         MediaPlayer mp = new MediaPlayer();
+        mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        String url = "https://www.youtube.com/watch?v=ifxawOuDaGw";
         try {
             mp.setDataSource("rtsp://" + ipaddress.getText() + ":" + Config.STREAM_PORT_ADDRESS + "/");
+            //mp.setDataSource(url);
+            mp.setOnErrorListener(this);
+            mp.setOnPreparedListener(this);
+            mp.prepareAsync();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,5 +72,15 @@ public class SpeakerActivity extends AppCompatActivity {
     }
 
     public void stop(View view) {
+    }
+
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+        mp.start();
+    }
+
+    @Override
+    public boolean onError(MediaPlayer mp, int what, int extra) {
+        return false;
     }
 }
