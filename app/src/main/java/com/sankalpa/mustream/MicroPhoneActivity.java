@@ -46,7 +46,7 @@ public class MicroPhoneActivity extends AppCompatActivity implements Session.Cal
                 .setCallback(this)
                 .setAudioEncoder(SessionBuilder.AUDIO_AMRNB)
                 .setContext(getApplicationContext())
-                .setDestination("224.0.0.1")
+                //.setDestination("224.0.0.1")
                 .setVideoEncoder(SessionBuilder.VIDEO_NONE).build();
 
         // Starts the RTSP server

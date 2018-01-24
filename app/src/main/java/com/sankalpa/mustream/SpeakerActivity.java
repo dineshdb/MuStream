@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import net.majorkernelpanic.streaming.Session;
@@ -23,6 +25,7 @@ public class SpeakerActivity extends AppCompatActivity {
     Thread thread;
     RtspClient client;
     String serverIp = "0.0.0.0";
+    EditText ipaddress ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +33,7 @@ public class SpeakerActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String message=getResources().getString(R.string.speaker);
         TextView textView = findViewById(R.id.textView);
+        ipaddress = findViewById(R.id.ipaddress);
         textView.setText(message);
 
 /*
@@ -50,14 +54,16 @@ public class SpeakerActivity extends AppCompatActivity {
         //this.thread.start();
 
     }
-
-    public void start(){
+    public void play(View view) {
         MediaPlayer mp = new MediaPlayer();
         try {
-            mp.setDataSource("rtsp://" + serverIp + ":" + Config.STREAM_PORT_ADDRESS + "/");
-            mp.start();
+            mp.setDataSource("rtsp://" + ipaddress.getText() + ":" + Config.STREAM_PORT_ADDRESS + "/");
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+    }
+
+    public void stop(View view) {
     }
 }
