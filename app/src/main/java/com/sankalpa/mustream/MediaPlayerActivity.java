@@ -27,7 +27,7 @@ public class MediaPlayerActivity extends AppCompatActivity {
         String ipAddress = Network.getWifiIpAddress(this);
 
         try {
-            qrCode.setImageBitmap(generateQRCode(ipAddress));
+            qrCode.setImageBitmap(generateQRCode(ipAddress + ":" + Config.STREAM_PORT_ADDRESS));
         } catch (WriterException e) {
             e.printStackTrace();
         }

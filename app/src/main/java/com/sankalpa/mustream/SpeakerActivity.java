@@ -10,25 +10,21 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.android.gms.common.api.CommonStatusCodes;
-
 import java.io.IOException;
 
 public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
 
     private static final String TAG = "Speaker";
-    EditText ipAddress;
+    TextView ipAddress;
     Thread latencyThread;
+
 
     private static final int RC_BARCODE_CAPTURE = 9001;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_speaker);
-        TextView textView = findViewById(R.id.textView);
-
-        Intent intent = getIntent();
-        String message=getResources().getString(R.string.speaker);
+        ipAddress = findViewById(R.id.ip_address);
 
 //        ipAddress = findViewById(R.id.ipaddress);
 //        textView.setText(message);
@@ -59,7 +55,7 @@ public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.On
         mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
         try {
-            mp.setDataSource("rtsp://" + ipAddress.getText() + ":" + Config.STREAM_PORT_ADDRESS + "/");
+            mp.setDataSource("rtsp://" + Config.getInstance().getIpAddress() + ":" + Config.STREAM_PORT_ADDRESS + "/");
             mp.setOnErrorListener(this);
             mp.setOnPreparedListener(this);
             mp.prepareAsync();
@@ -71,16 +67,15 @@ public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RC_BARCODE_CAPTURE) {
-            if (resultCode == CommonStatusCodes.SUCCESS) {
-                if (data != null) {
-                    Log.d(TAG, "Barcode read: " + data);
-                } else {
-                    Log.d(TAG, "No barcode captured, intent data is null");
-                }
-            } else {
+            if (resultCode == RESULT_OK) {
+                String contents = data.getStringExtra("SCAN_RESULT");
+                Config.getInstance().setIpAddress(contents);
+                ipAddress.setText(contents);
+                Log.d(TAG, "contents: " + contents);
+            } else if (resultCode == RESULT_CANCELED) {
+                Log.d(TAG, "RESULT_CANCELED");
             }
-        }
-        else {
+        } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
@@ -95,8 +90,9 @@ public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.On
         return false;
     }
 
-    public void process(View view) {
-        Intent intent = new Intent(this, ScannedBarcodeActivity.class);
+    public void scanQR(View view) {
+        Intent intent = new Intent("com.google.zxing.client.android.SCAN");
+        intent.putExtra("SAVE_HISTORY", false);
         startActivityForResult(intent, RC_BARCODE_CAPTURE);
     }
 }

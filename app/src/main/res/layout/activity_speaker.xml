@@ -12,23 +12,26 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView android:text=""
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/txtContent"/>
+            android:id="@+id/ip_address"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Scan"
-            android:id="@+id/button"
-            android:onClick="process"
+            android:onClick="scanQR"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true" />
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imgview"/>
-    </LinearLayout>
+         <Button
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:text="Play"
+             android:onClick="play"
+             android:layout_alignParentTop="true"
+             android:layout_alignParentStart="true" />
+
+     </LinearLayout>
 
 
 
