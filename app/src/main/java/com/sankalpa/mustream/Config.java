@@ -9,6 +9,7 @@ public class Config {
     public static final int STREAM_PORT_ADDRESS = 9864;
     private String ipAddress;
     private static Config instance = null;
+    int latency;
 
     private Mode mode;
 
@@ -28,6 +29,13 @@ public class Config {
 
     public Mode getMode() {
         return mode;
+    }
+
+    public void setLatency(int latency){
+        this.latency = latency;
+    }
+    public int getLatency(){
+        return latency;
     }
 
     public void setMode(Mode mode) {

@@ -9,16 +9,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import net.majorkernelpanic.streaming.rtsp.RtspClient;
-
 import java.io.IOException;
 
 public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
 
-    Thread thread;
-    RtspClient client;
-    String serverIp = "0.0.0.0";
-    EditText ipaddress ;
+    EditText ipAddress;
+    Thread latencyThread;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,8 +22,11 @@ public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.On
         Intent intent = getIntent();
         String message=getResources().getString(R.string.speaker);
         TextView textView = findViewById(R.id.textView);
-        ipaddress = findViewById(R.id.ipaddress);
+        ipAddress = findViewById(R.id.ipaddress);
         textView.setText(message);
+
+        this.latencyThread = new Thread(new LatencyThread());
+        this.latencyThread.start();
 
 /*
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(SpeakerActivity.this);
@@ -50,10 +49,9 @@ public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.On
     public void play(View view) {
         MediaPlayer mp = new MediaPlayer();
         mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        String url = "https://www.youtube.com/watch?v=ifxawOuDaGw";
+
         try {
-            mp.setDataSource("rtsp://" + ipaddress.getText() + ":" + Config.STREAM_PORT_ADDRESS + "/");
-            //mp.setDataSource(url);
+            mp.setDataSource("rtsp://" + ipAddress.getText() + ":" + Config.STREAM_PORT_ADDRESS + "/");
             mp.setOnErrorListener(this);
             mp.setOnPreparedListener(this);
             mp.prepareAsync();
