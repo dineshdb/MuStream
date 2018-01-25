@@ -22,4 +22,8 @@ public class MediaPlayerActivity extends AppCompatActivity {
 
     public void play(View view) {
     }
+
+    public void generateQRCode(String str){
+
+    }
 }
