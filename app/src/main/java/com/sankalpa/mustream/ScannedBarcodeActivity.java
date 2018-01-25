@@ -45,7 +45,7 @@ public class ScannedBarcodeActivity extends AppCompatActivity implements Surface
                 .build();
 
         cameraSource = new CameraSource.Builder(this, barcodeDetector)
-                .setRequestedPreviewSize(640, 480)
+                .setRequestedPreviewSize(800, 600)
 //                .setAutoFocusEnabled(true) //you should add this feature
                 .build();
 

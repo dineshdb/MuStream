@@ -34,6 +34,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-vision:7.8+'
 
     compile 'com.google.android.gms:play-services:7.8+'
+
+    compile 'com.google.zxing:core:3.2.1'
 }
 repositories {
     mavenCentral()
