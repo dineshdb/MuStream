@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 26
@@ -32,6 +31,11 @@ dependencies {
     compile 'com.github.ar-android:libstreaming:1.0.0'
     compile 'com.android.support:appcompat-v7:26.1.0'
     compile 'com.android.support:design:26.1.0'
+    implementation 'com.google.android.gms:play-services-vision:7.8+'
+
+    compile 'com.google.android.gms:play-services:7.8+'
+
+    compile 'com.google.zxing:core:3.2.1'
 }
 repositories {
     mavenCentral()
