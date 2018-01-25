@@ -33,6 +33,9 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <meta-data
+                android:name="com.google.android.gms.vision.DEPENDENCIES"
+                android:value="barcode" />
         </activity>
         <activity
             android:name=".SpeakerActivity"
@@ -44,9 +47,7 @@
             android:name=".MediaPlayerActivity"
             android:parentActivityName=".MainActivity" />
         <service android:name="net.majorkernelpanic.streaming.rtsp.RtspServer"/>
-        <meta-data
-            android:name="com.google.android.gms.vision.DEPENDENCIES"
-            android:value="barcode" />
+        <activity android:name=".ScannedBarcodeActivity" />
     </application>
 
 </manifest>
