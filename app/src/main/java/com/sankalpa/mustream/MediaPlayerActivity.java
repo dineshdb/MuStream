@@ -1,8 +1,12 @@
 package com.sankalpa.mustream;
 
 import android.graphics.Bitmap;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,9 +23,13 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-public class MediaPlayerActivity extends AppCompatActivity {
+import java.io.IOException;
+
+public class MediaPlayerActivity extends AppCompatActivity implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
+    private static final String TAG = "MediaPlayer";
     Thread player;
     private int QRcodeWidth = 500;
+    MediaPlayer mp ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +45,17 @@ public class MediaPlayerActivity extends AppCompatActivity {
         qrCode.setImageBitmap(img);
 
         textView.setText(ipAddress);
+        mp = new MediaPlayer();
+        mp.setOnErrorListener(this);
+        mp.setOnPreparedListener(this);
+        mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try {
+            Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.wildfire);
+            mp.setDataSource(this, uri);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mp.prepareAsync();
 
 /*        this.player = new Thread(new NetworkDiscoveryServer(this));
         this.player.start();*/
@@ -67,7 +86,12 @@ public class MediaPlayerActivity extends AppCompatActivity {
     public void stopMusic(StopEvent e){
 
     }
-    public void play(View view) {
+    public void play(View view){
+        if(mp.isPlaying()){
+            mp.pause();
+        } else{
+            mp.start();
+        }
     }
     Bitmap generateQRCode(String v){
                 BitMatrix bitMatrix;
@@ -99,8 +123,20 @@ public class MediaPlayerActivity extends AppCompatActivity {
     }
 
     public void stop(View view) {
+        mp.stop();
     }
 
     public void playNext(View view) {
+    }
+
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+        mp.start();
+    }
+
+    @Override
+    public boolean onError(MediaPlayer mp, int what, int extra) {
+        Log.e(TAG, "Error playing file");
+        return false;
     }
 }
