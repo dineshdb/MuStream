@@ -46,7 +46,7 @@
                 android:id="@+id/play_pause"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Play"
+                android:text="Pause"
                 android:onClick="play"
                 tools:layout_editor_absoluteX="128dp"
                 tools:layout_editor_absoluteY="377dp" />
