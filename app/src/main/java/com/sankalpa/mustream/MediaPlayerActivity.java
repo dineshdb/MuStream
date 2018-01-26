@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -92,8 +93,10 @@ public class MediaPlayerActivity extends AppCompatActivity implements MediaPlaye
     public void play(View view){
         if(mp.isPlaying()){
             mp.pause();
+            ((Button) findViewById(R.id.play_pause)).setText("Play");
         } else{
             mp.start();
+            ((Button) findViewById(R.id.play_pause)).setText("Pause");
         }
     }
     Bitmap generateQRCode(String v){
