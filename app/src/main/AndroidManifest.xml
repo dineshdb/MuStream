@@ -7,9 +7,8 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-
     <uses-permission android:name="android.permission.CAMERA" />
-
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
     <uses-permission android:name="android.permission.INTERNET" />
@@ -30,12 +29,8 @@
             android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <meta-data
-                android:name="com.google.android.gms.vision.DEPENDENCIES"
-                android:value="barcode" />
         </activity>
         <activity
             android:name=".SpeakerActivity"
@@ -51,12 +46,6 @@
         <activity
             android:name=".MediaPlayerActivity"
             android:parentActivityName=".MainActivity" />
-
-        <activity
-            android:name="com.google.zxing.client.android.CaptureActivity"
-            android:screenOrientation="landscape" >
-        </activity>
-
         <service android:name="net.majorkernelpanic.streaming.rtsp.RtspServer"/>
     </application>
 

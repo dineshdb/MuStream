@@ -17,6 +17,7 @@ public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.On
     private static final String TAG = "Speaker";
     TextView ipAddress;
     Thread latencyThread;
+    Thread websocketClient;
 
 
     private static final int RC_BARCODE_CAPTURE = 9001;
@@ -25,6 +26,7 @@ public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_speaker);
         ipAddress = findViewById(R.id.ip_address);
+        websocketClient = new Thread(new SyncClient());
 
 //        ipAddress = findViewById(R.id.ipaddress);
 //        textView.setText(message);

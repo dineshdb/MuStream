@@ -10,11 +10,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+import com.koushikdutta.async.callback.CompletedCallback;
+import com.koushikdutta.async.http.WebSocket;
+import com.koushikdutta.async.http.server.AsyncHttpServer;
+import com.koushikdutta.async.http.server.AsyncHttpServerRequest;
 import com.sankalpa.mustream.events.PauseEvent;
 import com.sankalpa.mustream.events.PlayEvent;
 import com.sankalpa.mustream.events.StopEvent;
@@ -24,12 +29,14 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MediaPlayerActivity extends AppCompatActivity implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
     private static final String TAG = "MediaPlayer";
-    Thread player;
     private int QRcodeWidth = 500;
-    MediaPlayer mp ;
+    MediaPlayer mp;
+    Thread server ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +48,14 @@ public class MediaPlayerActivity extends AppCompatActivity implements MediaPlaye
 
         String ipAddress = Network.getWifiIpAddress(this);
 
-        Bitmap img = generateQRCode(ipAddress + ":" + Config.STREAM_PORT_ADDRESS);
+        Bitmap img = generateQRCode(ipAddress );
         qrCode.setImageBitmap(img);
 
         textView.setText(ipAddress);
+
+        server = new Thread(new SyncServer(this));
+        server.start();
+
         mp = new MediaPlayer();
         mp.setOnErrorListener(this);
         mp.setOnPreparedListener(this);
@@ -56,7 +67,6 @@ public class MediaPlayerActivity extends AppCompatActivity implements MediaPlaye
             e.printStackTrace();
         }
         mp.prepareAsync();
-
 /*        this.player = new Thread(new NetworkDiscoveryServer(this));
         this.player.start();*/
 

@@ -7,6 +7,7 @@ package com.sankalpa.mustream;
 public class Config {
     public static final int DISCOVERY_PORT_ADDRESS = 9863;
     public static final int STREAM_PORT_ADDRESS = 9864;
+    public static final int WEBSOCKET_PORT = 9865;
     private String ipAddress;
     private static Config instance = null;
     int latency;

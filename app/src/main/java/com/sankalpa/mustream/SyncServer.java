@@ -1,53 +1,57 @@
 package com.sankalpa.mustream;
 
-import org.java_websocket.WebSocket;
-import org.java_websocket.handshake.ClientHandshake;
-import org.java_websocket.server.WebSocketServer;
+import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
 
-import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
+import com.koushikdutta.async.callback.CompletedCallback;
+import com.koushikdutta.async.http.WebSocket;
+import com.koushikdutta.async.http.server.AsyncHttpServer;
+import com.koushikdutta.async.http.server.AsyncHttpServerRequest;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by deenesh12 on 1/25/18.
+ * Created by deenesh12 on 1/26/18.
  */
-public class SyncServer extends WebSocketServer {
 
+public class SyncServer implements Runnable {
+    Context c;
 
-
-    public SyncServer(InetSocketAddress address) {
-        super(address);
+    public SyncServer(Context c){
+        this.c = c;
     }
-
     @Override
-    public void onOpen(WebSocket conn, ClientHandshake handshake) {
-        conn.send("Welcome to the server!"); //This method sends a message to the new client
-        broadcast( "new connection: " + handshake.getResourceDescriptor() ); //This method sends a message to all clients connected
-        System.out.println("new connection to " + conn.getRemoteSocketAddress());
-    }
+    public void run() {
 
-    @Override
-    public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-        System.out.println("closed " + conn.getRemoteSocketAddress() + " with exit code " + code + " additional info: " + reason);
-    }
+        final List<WebSocket> conn = new ArrayList<>();
+        final AsyncHttpServer server = new AsyncHttpServer();
+        server.websocket("/", new AsyncHttpServer.WebSocketRequestCallback() {
+            @Override
+            public void onConnected(final WebSocket webSocket, AsyncHttpServerRequest request) {
+                conn.add(webSocket);
+                webSocket.setClosedCallback(new CompletedCallback() {
+                    @Override
+                    public void onCompleted(Exception ex) {
+                        try {
+                            if (ex != null)
+                                Log.e("WebSocket", "Error");
+                        } finally {
+                            conn.remove(webSocket);
+                        }
+                    }
+                });
+                webSocket.setStringCallback(new WebSocket.StringCallback() {
+                    @Override
+                    public void onStringAvailable(String s) {
+                        Log.d("SERVERTAG",s);
+                        Toast.makeText(c,s,Toast.LENGTH_SHORT).show();
+                    }
+                });
 
-    @Override
-    public void onMessage(WebSocket conn, String message) {
-        System.out.println("received message from "	+ conn.getRemoteSocketAddress() + ": " + message);
+            }
+        });
+        server.listen(Config.WEBSOCKET_PORT);
     }
-
-    @Override
-    public void onMessage( WebSocket conn, ByteBuffer message ) {
-        System.out.println("received ByteBuffer from "	+ conn.getRemoteSocketAddress());
-    }
-
-    @Override
-    public void onError(WebSocket conn, Exception ex) {
-        System.err.println("an error occured on connection " + conn.getRemoteSocketAddress()  + ":" + ex);
-    }
-
-    @Override
-    public void onStart() {
-        System.out.println("server started successfully");
-    }
-
 }
