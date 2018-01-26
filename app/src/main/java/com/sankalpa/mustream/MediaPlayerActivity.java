@@ -10,16 +10,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
-import com.koushikdutta.async.callback.CompletedCallback;
-import com.koushikdutta.async.http.WebSocket;
-import com.koushikdutta.async.http.server.AsyncHttpServer;
-import com.koushikdutta.async.http.server.AsyncHttpServerRequest;
 import com.sankalpa.mustream.events.PauseEvent;
 import com.sankalpa.mustream.events.PlayEvent;
 import com.sankalpa.mustream.events.StopEvent;
@@ -29,8 +24,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MediaPlayerActivity extends AppCompatActivity implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
     private static final String TAG = "MediaPlayer";

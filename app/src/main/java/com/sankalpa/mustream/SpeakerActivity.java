@@ -10,6 +10,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.sankalpa.mustream.events.ServerAddressEvent;
+
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.IOException;
 
 public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
@@ -27,6 +31,7 @@ public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.On
         setContentView(R.layout.activity_speaker);
         ipAddress = findViewById(R.id.ip_address);
         websocketClient = new Thread(new SyncClient());
+        websocketClient.start();
 
 //        ipAddress = findViewById(R.id.ipaddress);
 //        textView.setText(message);
@@ -72,6 +77,7 @@ public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.On
             if (resultCode == RESULT_OK) {
                 String contents = data.getStringExtra("SCAN_RESULT");
                 Config.getInstance().setIpAddress(contents);
+                EventBus.getDefault().post(new ServerAddressEvent(contents));
                 ipAddress.setText(contents);
                 Log.d(TAG, "contents: " + contents);
             } else if (resultCode == RESULT_CANCELED) {

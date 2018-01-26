@@ -31,6 +31,7 @@ public class SyncServer implements Runnable {
             @Override
             public void onConnected(final WebSocket webSocket, AsyncHttpServerRequest request) {
                 conn.add(webSocket);
+                webSocket.send("Hello");
                 webSocket.setClosedCallback(new CompletedCallback() {
                     @Override
                     public void onCompleted(Exception ex) {
