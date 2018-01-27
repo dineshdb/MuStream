@@ -16,7 +16,9 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+import com.sankalpa.mustream.events.PauseEvent;
 import com.sankalpa.mustream.events.PlayEvent;
+import com.sankalpa.mustream.events.PlayNextEvent;
 import com.sankalpa.mustream.events.PrepareEvent;
 import com.sankalpa.mustream.events.StopEvent;
 
@@ -78,19 +80,13 @@ public class MediaPlayerActivity extends AppCompatActivity implements MediaPlaye
         super.onStop();
         EventBus.getDefault().unregister(this);
     }
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void playMusic(PlayEvent e){
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void stopMusic(StopEvent e){
-
-    }
     public void play(View view){
         if(mp.isPlaying()){
+            EventBus.getDefault().post(new PauseEvent());
             mp.pause();
             ((Button) findViewById(R.id.play_pause)).setText("Play");
         } else{
+            EventBus.getDefault().post(new PlayEvent());
             mp.start();
             ((Button) findViewById(R.id.play_pause)).setText("Pause");
         }
@@ -126,9 +122,11 @@ public class MediaPlayerActivity extends AppCompatActivity implements MediaPlaye
 
     public void stop(View view) {
         mp.stop();
+        EventBus.getDefault().post(new StopEvent());
     }
 
     public void playNext(View view) {
+        EventBus.getDefault().post(new PlayNextEvent());
     }
 
     @Override
