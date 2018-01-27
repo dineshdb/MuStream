@@ -1,10 +1,12 @@
 package com.sankalpa.mustream;
 
+import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 import com.sankalpa.mustream.events.PauseEvent;
 import com.sankalpa.mustream.events.PlayEvent;
 import com.sankalpa.mustream.events.PrepareEvent;
+import com.sankalpa.mustream.events.RequestCurrentPosition;
 import com.sankalpa.mustream.events.ServerAddressEvent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -27,6 +30,7 @@ public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.On
     Thread latencyThread;
     Thread websocketClient;
     MediaPlayer mp;
+    PowerManager.WakeLock wakeLock;
 
 
     private static final int RC_BARCODE_CAPTURE = 9001;
@@ -40,8 +44,10 @@ public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.On
         mp = new MediaPlayer();
         mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
-//        ipAddress = findViewById(R.id.ipaddress);
-//        textView.setText(message);
+        PowerManager powerManager =(PowerManager)this.getSystemService(Context.POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, ""); // PARTIAL_WAKE_LOCK Only keeps CPU on
+
+        wakeLock.acquire();
 
 //        this.latencyThread = new Thread(new LatencyThread());
 //        this.latencyThread.start();
@@ -56,13 +62,10 @@ public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.On
         client = new RtspClient();
         client.setSession(session);
 */
-
-
 //        final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(2);
 //        executor.schedule(new NetworkDiscoveryClient(), 1, TimeUnit.SECONDS );
         //this.thread = new Thread(new NetworkDiscoveryClient());
         //this.thread.start();
-
     }
 
     public void play(View view) {
@@ -87,14 +90,19 @@ public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.On
 
     @Subscribe
     public void pauseMusic(PauseEvent e){
+        wakeLock.release();
         if(mp.isPlaying()){
             mp.pause();
         }
     }
     @Subscribe
     public void playMusic(PlayEvent e){
+        wakeLock.acquire();
        if(!mp.isPlaying()){
+           mp.seekTo(e.offset);
            mp.start();
+           Log.d(TAG, " " + e.offset);
+
        }
     }
     @Subscribe
@@ -129,7 +137,8 @@ public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.On
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        mp.start();
+        Log.d(TAG, "Onprepared cll");
+        EventBus.getDefault().post(new RequestCurrentPosition());
     }
 
     @Override

@@ -1,10 +1,12 @@
 package com.sankalpa.mustream;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -23,8 +25,6 @@ import com.sankalpa.mustream.events.PrepareEvent;
 import com.sankalpa.mustream.events.StopEvent;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 
@@ -33,6 +33,9 @@ public class MediaPlayerActivity extends AppCompatActivity implements MediaPlaye
     private int QRcodeWidth = 500;
     MediaPlayer mp;
     Thread server ;
+
+    PowerManager powerManager;
+    PowerManager.WakeLock wakeLock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,14 +59,21 @@ public class MediaPlayerActivity extends AppCompatActivity implements MediaPlaye
         mp.setOnErrorListener(this);
         mp.setOnPreparedListener(this);
         mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        Config.getInstance().setMediaPlayer(mp);
+
+        PowerManager powerManager =(PowerManager)this.getSystemService(Context.POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, ""); // PARTIAL_WAKE_LOCK Only keeps CPU on
+
         try {
             Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.wildfire);
             mp.setDataSource(this, uri);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        wakeLock.acquire();
         mp.prepareAsync();
         EventBus.getDefault().post(new PrepareEvent(R.raw.wildfire));
+
 /*        this.player = new Thread(new NetworkDiscoveryServer(this));
         this.player.start();*/
 
@@ -80,12 +90,21 @@ public class MediaPlayerActivity extends AppCompatActivity implements MediaPlaye
     }
     public void play(View view){
         if(mp.isPlaying()){
-            EventBus.getDefault().post(new PauseEvent());
             mp.pause();
+            EventBus.getDefault().post(new PauseEvent());
             ((Button) findViewById(R.id.play_pause)).setText("Play");
         } else{
-            EventBus.getDefault().post(new PlayEvent());
             mp.start();
+/*
+            EventBus.getDefault().post(new Runnable() {
+                @Override
+                public void run() {
+                    EventBus.getDefault().post(new PlayEvent(Config.getInstance().mp.getCurrentPosition()));
+                }
+            });
+*/
+            EventBus.getDefault().post(new PlayEvent(mp.getCurrentPosition()));
+
             ((Button) findViewById(R.id.play_pause)).setText("Pause");
         }
     }

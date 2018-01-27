@@ -7,6 +7,7 @@ import com.koushikdutta.async.http.WebSocket;
 import com.sankalpa.mustream.events.PauseEvent;
 import com.sankalpa.mustream.events.PlayEvent;
 import com.sankalpa.mustream.events.PrepareEvent;
+import com.sankalpa.mustream.events.RequestCurrentPosition;
 import com.sankalpa.mustream.events.ServerAddressEvent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -20,11 +21,17 @@ public class SyncClient implements Runnable{
 
     private static final String TAG = "SyncClient";
     AsyncHttpClient client;
+    WebSocket w;
 
     @Override
     public void run() {
         EventBus.getDefault().register(this);
         client = AsyncHttpClient.getDefaultInstance();
+    }
+
+    @Subscribe
+    public void currentPositionRequested(RequestCurrentPosition e){
+        w.send("request_stat");
     }
     @Subscribe
     public void startConnection(ServerAddressEvent e){
@@ -38,9 +45,9 @@ public class SyncClient implements Runnable{
                     return;
                 }
                 Log.d(TAG, "Connected " );
+                w = webSocket;
 
-
-                webSocket.setStringCallback(new WebSocket.StringCallback() {
+                w.setStringCallback(new WebSocket.StringCallback() {
                     public void onStringAvailable(String s) {
                         Log.d(TAG, "Got message: " + s);
 
@@ -48,7 +55,8 @@ public class SyncClient implements Runnable{
                             int id = Integer.parseInt(s.split(":")[1]);
                             EventBus.getDefault().post(new PrepareEvent(id));
                         } else if(s.startsWith("play")){
-                            EventBus.getDefault().post(new PlayEvent());
+                            final int offset = Integer.parseInt(s.split(" ")[1]);
+                            EventBus.getDefault().post(new PlayEvent(offset));
                         } else if(s.startsWith("pause")){
                             EventBus.getDefault().post(new PauseEvent());
                         }

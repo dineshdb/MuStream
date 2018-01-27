@@ -24,6 +24,7 @@ import java.util.List;
  */
 
 public class SyncServer implements Runnable {
+    private static final String TAG = "SyncServer";
     Context c;
     AsyncHttpServer server;
     List<WebSocket> conn;
@@ -50,7 +51,7 @@ public class SyncServer implements Runnable {
                     public void onCompleted(Exception ex) {
                         try {
                             if (ex != null)
-                                Log.e("WebSocket", "Error");
+                                Log.e("WebSocket", "Error " + ex.getMessage());
                         } finally {
                             conn.remove(webSocket);
                         }
@@ -59,8 +60,13 @@ public class SyncServer implements Runnable {
                 webSocket.setStringCallback(new WebSocket.StringCallback() {
                     @Override
                     public void onStringAvailable(String s) {
-                        Log.d("SERVERTAG",s);
-                        Toast.makeText(c,s,Toast.LENGTH_SHORT).show();
+//                        Log.d(TAG, "Got message " + s);
+                        if(s.startsWith("request_stat")){
+                            webSocket.send("play "+ Config.getInstance().mp.getCurrentPosition());
+                            if(!Config.getInstance().mp.isPlaying()){
+                                webSocket.send("pause");
+                            }
+                        }
                     }
                 });
 
@@ -86,7 +92,7 @@ public class SyncServer implements Runnable {
     @Subscribe
     public void playMusic(PlayEvent e){
         for(WebSocket w:conn){
-            w.send("play");
+            w.send("play " + e.offset);
         }
     }
     @Subscribe

@@ -6,8 +6,13 @@ package com.sankalpa.mustream.events;
 
 public class PrepareEvent {
     public int music;
+    public int offset = 0;
 
     public PrepareEvent(int m){
         music = m;
+    }
+    public PrepareEvent(int m, int o){
+        music = m;
+        offset = o;
     }
 }

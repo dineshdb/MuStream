@@ -1,5 +1,7 @@
 package com.sankalpa.mustream;
 
+import android.media.MediaPlayer;
+
 /**
  * Created by deenesh12 on 1/21/18.
  */
@@ -11,6 +13,8 @@ public class Config {
     private String ipAddress;
     private static Config instance = null;
     int latency;
+
+    public MediaPlayer mp;
 
     private Mode mode;
 
@@ -45,5 +49,8 @@ public class Config {
 
     public void setIpAddress(String ipAddress) {
         this.ipAddress = ipAddress;
+    }
+    public void setMediaPlayer(MediaPlayer mp){
+        this.mp = mp;
     }
 }
