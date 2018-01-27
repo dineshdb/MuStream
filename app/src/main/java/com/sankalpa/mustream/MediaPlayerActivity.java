@@ -72,13 +72,11 @@ public class MediaPlayerActivity extends AppCompatActivity implements MediaPlaye
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
     }
 
     @Override
     public void onStop(){
         super.onStop();
-        EventBus.getDefault().unregister(this);
     }
     public void play(View view){
         if(mp.isPlaying()){

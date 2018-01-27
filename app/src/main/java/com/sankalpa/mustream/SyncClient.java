@@ -2,9 +2,6 @@ package com.sankalpa.mustream;
 
 import android.util.Log;
 
-import com.koushikdutta.async.ByteBufferList;
-import com.koushikdutta.async.DataEmitter;
-import com.koushikdutta.async.callback.DataCallback;
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.WebSocket;
 import com.sankalpa.mustream.events.PauseEvent;
@@ -32,14 +29,23 @@ public class SyncClient implements Runnable{
     @Subscribe
     public void startConnection(ServerAddressEvent e){
         Log.d(TAG, "Starting websocket" + e.getServer());
-        client.websocket(e.getServer(), null, new AsyncHttpClient.WebSocketConnectCallback() {
+
+        client.websocket("http://" + e.getServer() + ":" + Config.WEBSOCKET_PORT + "/", null, new AsyncHttpClient.WebSocketConnectCallback() {
             @Override
             public void onCompleted(Exception ex, WebSocket webSocket) {
+                if(ex != null){
+                    Log.d(TAG, "Exception while connecting " + ex.getMessage());
+                    return;
+                }
                 Log.d(TAG, "Connected " );
+
+
                 webSocket.setStringCallback(new WebSocket.StringCallback() {
                     public void onStringAvailable(String s) {
+                        Log.d(TAG, "Got message: " + s);
+
                         if(s.startsWith("prepare")){
-                            int id = Integer.parseInt(s.split(" ")[1]);
+                            int id = Integer.parseInt(s.split(":")[1]);
                             EventBus.getDefault().post(new PrepareEvent(id));
                         } else if(s.startsWith("play")){
                             EventBus.getDefault().post(new PlayEvent());
@@ -48,13 +54,13 @@ public class SyncClient implements Runnable{
                         }
                     }
                 });
-                webSocket.setDataCallback(new DataCallback() {
+              /*  webSocket.setDataCallback(new DataCallback() {
                     public void onDataAvailable(DataEmitter emitter, ByteBufferList byteBufferList) {
                         System.out.println("I got some bytes!");
                         // note that this data has been read
                         byteBufferList.recycle();
                     }
-                });
+                });*/
             }
         });
     }
