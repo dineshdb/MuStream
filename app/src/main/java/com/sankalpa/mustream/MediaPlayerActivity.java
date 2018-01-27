@@ -17,6 +17,7 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.sankalpa.mustream.events.PlayEvent;
+import com.sankalpa.mustream.events.PrepareEvent;
 import com.sankalpa.mustream.events.StopEvent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -60,6 +61,7 @@ public class MediaPlayerActivity extends AppCompatActivity implements MediaPlaye
             e.printStackTrace();
         }
         mp.prepareAsync();
+        EventBus.getDefault().post(new PrepareEvent(R.raw.wildfire));
 /*        this.player = new Thread(new NetworkDiscoveryServer(this));
         this.player.start();*/
 

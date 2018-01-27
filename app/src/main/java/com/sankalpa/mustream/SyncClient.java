@@ -7,6 +7,9 @@ import com.koushikdutta.async.DataEmitter;
 import com.koushikdutta.async.callback.DataCallback;
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.WebSocket;
+import com.sankalpa.mustream.events.PauseEvent;
+import com.sankalpa.mustream.events.PlayEvent;
+import com.sankalpa.mustream.events.PrepareEvent;
 import com.sankalpa.mustream.events.ServerAddressEvent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -35,7 +38,14 @@ public class SyncClient implements Runnable{
                 Log.d(TAG, "Connected " );
                 webSocket.setStringCallback(new WebSocket.StringCallback() {
                     public void onStringAvailable(String s) {
-                        System.out.println("I got a string: " + s);
+                        if(s.startsWith("prepare")){
+                            int id = Integer.parseInt(s.split(" ")[1]);
+                            EventBus.getDefault().post(new PrepareEvent(id));
+                        } else if(s.startsWith("play")){
+                            EventBus.getDefault().post(new PlayEvent());
+                        } else if(s.startsWith("pause")){
+                            EventBus.getDefault().post(new PauseEvent());
+                        }
                     }
                 });
                 webSocket.setDataCallback(new DataCallback() {

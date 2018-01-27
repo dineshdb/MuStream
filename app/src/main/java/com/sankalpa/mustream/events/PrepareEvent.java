@@ -5,5 +5,9 @@ package com.sankalpa.mustream.events;
  */
 
 public class PrepareEvent {
-    public String music;
+    public int music;
+
+    public PrepareEvent(int m){
+        music = m;
+    }
 }
