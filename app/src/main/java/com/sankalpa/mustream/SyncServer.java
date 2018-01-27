@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.koushikdutta.async.callback.CompletedCallback;
+import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.WebSocket;
 import com.koushikdutta.async.http.server.AsyncHttpServer;
 import com.koushikdutta.async.http.server.AsyncHttpServerRequest;
@@ -18,15 +19,16 @@ import java.util.List;
 
 public class SyncServer implements Runnable {
     Context c;
-
+    AsyncHttpServer server;
+    List<WebSocket> conn;
     public SyncServer(Context c){
         this.c = c;
     }
     @Override
     public void run() {
+        conn = new ArrayList<>();
+        server = new AsyncHttpServer();
 
-        final List<WebSocket> conn = new ArrayList<>();
-        final AsyncHttpServer server = new AsyncHttpServer();
         server.websocket("/", new AsyncHttpServer.WebSocketRequestCallback() {
             @Override
             public void onConnected(final WebSocket webSocket, AsyncHttpServerRequest request) {

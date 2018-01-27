@@ -16,7 +16,6 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
-import com.sankalpa.mustream.events.PauseEvent;
 import com.sankalpa.mustream.events.PlayEvent;
 import com.sankalpa.mustream.events.StopEvent;
 
@@ -79,11 +78,6 @@ public class MediaPlayerActivity extends AppCompatActivity implements MediaPlaye
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void playMusic(PlayEvent e){
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void pauseMusic(PauseEvent e){
-
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

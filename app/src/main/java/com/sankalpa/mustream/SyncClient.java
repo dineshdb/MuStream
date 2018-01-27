@@ -2,6 +2,9 @@ package com.sankalpa.mustream;
 
 import android.util.Log;
 
+import com.koushikdutta.async.ByteBufferList;
+import com.koushikdutta.async.DataEmitter;
+import com.koushikdutta.async.callback.DataCallback;
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.WebSocket;
 import com.sankalpa.mustream.events.ServerAddressEvent;
@@ -30,6 +33,18 @@ public class SyncClient implements Runnable{
             @Override
             public void onCompleted(Exception ex, WebSocket webSocket) {
                 Log.d(TAG, "Connected " );
+                webSocket.setStringCallback(new WebSocket.StringCallback() {
+                    public void onStringAvailable(String s) {
+                        System.out.println("I got a string: " + s);
+                    }
+                });
+                webSocket.setDataCallback(new DataCallback() {
+                    public void onDataAvailable(DataEmitter emitter, ByteBufferList byteBufferList) {
+                        System.out.println("I got some bytes!");
+                        // note that this data has been read
+                        byteBufferList.recycle();
+                    }
+                });
             }
         });
     }

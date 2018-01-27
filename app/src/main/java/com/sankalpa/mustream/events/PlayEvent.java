@@ -5,6 +5,7 @@ package com.sankalpa.mustream.events;
  */
 
 public class PlayEvent {
-    int offset = 0;
-    String music;
+    public int offset = 0;
+    public String music;
+    public int track;
 }
