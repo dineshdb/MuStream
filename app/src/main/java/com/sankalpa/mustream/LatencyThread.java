@@ -1,5 +1,7 @@
 package com.sankalpa.mustream;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -9,6 +11,8 @@ import java.net.UnknownHostException;
  */
 
 public class LatencyThread implements Runnable {
+
+    private static final String TAG = "LATENCY";
 
     @Override
     public void run() {
@@ -29,6 +33,7 @@ public class LatencyThread implements Runnable {
                 }
             }
             Config.getInstance().setLatency(sum / 5);
+            Log.d(TAG, "" + sum / 5);
         }
     }
 }

@@ -12,6 +12,7 @@ import com.sankalpa.mustream.events.ServerAddressEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Created by deenesh12 on 1/25/18.
@@ -29,11 +30,11 @@ public class SyncClient implements Runnable{
         client = AsyncHttpClient.getDefaultInstance();
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void currentPositionRequested(RequestCurrentPosition e){
-        w.send("request_stat");
+        w.send(SyncServer.REQUEST_STAT);
     }
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void startConnection(ServerAddressEvent e){
         Log.d(TAG, "Starting websocket" + e.getServer());
 
@@ -49,15 +50,15 @@ public class SyncClient implements Runnable{
 
                 w.setStringCallback(new WebSocket.StringCallback() {
                     public void onStringAvailable(String s) {
-                        Log.d(TAG, "Got message: " + s);
+//                        Log.d(TAG, "Got message: " + s);
 
-                        if(s.startsWith("prepare")){
-                            int id = Integer.parseInt(s.split(":")[1]);
+                        if(s.startsWith(SyncServer.PREPARE)){
+                            int id = Integer.parseInt(s.split(" ")[1]);
                             EventBus.getDefault().post(new PrepareEvent(id));
-                        } else if(s.startsWith("play")){
+                        } else if(s.startsWith(SyncServer.PLAY)){
                             final int offset = Integer.parseInt(s.split(" ")[1]);
                             EventBus.getDefault().post(new PlayEvent(offset));
-                        } else if(s.startsWith("pause")){
+                        } else if(s.startsWith(SyncServer.PAUSE)){
                             EventBus.getDefault().post(new PauseEvent());
                         }
                     }

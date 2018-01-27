@@ -37,7 +37,9 @@ public class Config {
     }
 
     public void setLatency(int latency){
-        this.latency = latency;
+        if(latency > 15 || latency < 5)
+            return;
+        this.latency =(int) ((latency + this.latency) / 1.6);
     }
     public int getLatency(){
         return latency;

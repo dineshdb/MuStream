@@ -95,16 +95,7 @@ public class MediaPlayerActivity extends AppCompatActivity implements MediaPlaye
             ((Button) findViewById(R.id.play_pause)).setText("Play");
         } else{
             mp.start();
-/*
-            EventBus.getDefault().post(new Runnable() {
-                @Override
-                public void run() {
-                    EventBus.getDefault().post(new PlayEvent(Config.getInstance().mp.getCurrentPosition()));
-                }
-            });
-*/
             EventBus.getDefault().post(new PlayEvent(mp.getCurrentPosition()));
-
             ((Button) findViewById(R.id.play_pause)).setText("Pause");
         }
     }

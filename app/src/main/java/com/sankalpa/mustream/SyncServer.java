@@ -15,6 +15,7 @@ import com.sankalpa.mustream.events.StopEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,12 @@ public class SyncServer implements Runnable {
     Context c;
     AsyncHttpServer server;
     List<WebSocket> conn;
+
+    public static final String PAUSE = "pause";
+    public static final String PLAY = "play ";
+    public static final String STOP = "stop";
+    public static final String PREPARE = "prepare ";
+    public static final String REQUEST_STAT = "request_stat";
 
     int currentMusic = -1;
     public SyncServer(Context c){
@@ -43,7 +50,7 @@ public class SyncServer implements Runnable {
             public void onConnected(final WebSocket webSocket, AsyncHttpServerRequest request) {
                 conn.add(webSocket);
                 if(currentMusic != -1){
-                    webSocket.send("prepare:" + currentMusic);
+                    webSocket.send(PREPARE + currentMusic);
                 }
 
                 webSocket.setClosedCallback(new CompletedCallback() {
@@ -61,10 +68,10 @@ public class SyncServer implements Runnable {
                     @Override
                     public void onStringAvailable(String s) {
 //                        Log.d(TAG, "Got message " + s);
-                        if(s.startsWith("request_stat")){
-                            webSocket.send("play "+ Config.getInstance().mp.getCurrentPosition());
+                        if(s.startsWith(REQUEST_STAT)){
+                            webSocket.send(PLAY + Config.getInstance().mp.getCurrentPosition());
                             if(!Config.getInstance().mp.isPlaying()){
-                                webSocket.send("pause");
+                                webSocket.send(PAUSE);
                             }
                         }
                     }
@@ -75,31 +82,36 @@ public class SyncServer implements Runnable {
         server.listen(Config.WEBSOCKET_PORT);
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void stopMusic(StopEvent e){
-        for(WebSocket w:conn){
-            w.send("stop");
+        int size = conn.size();
+        for(int i = 0; i < size; i++){
+            conn.get(i).send(STOP);
         }
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void pauseMusic(PauseEvent e){
-        for(WebSocket w:conn){
-            w.send("pause");
+        int size = conn.size();
+        for(int i = 0; i < size; i++){
+            conn.get(i).send(PAUSE);
         }
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void playMusic(PlayEvent e){
-        for(WebSocket w:conn){
-            w.send("play " + e.offset);
+        final String msg = PLAY + e.offset;
+        int size = conn.size();
+        for(int i = 0; i < size; i++){
+            conn.get(i).send(msg);
         }
     }
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void prepareMusic(PrepareEvent e){
         currentMusic = e.music;
+        final String msg = PREPARE + e.music;
         for(WebSocket w: conn){
-            w.send("prepare " + currentMusic );
+            w.send(msg);
         }
     }
 }

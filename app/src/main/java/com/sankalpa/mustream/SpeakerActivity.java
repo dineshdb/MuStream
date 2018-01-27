@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.PlaybackParams;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.sankalpa.mustream.events.PauseEvent;
@@ -31,6 +33,7 @@ public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.On
     Thread websocketClient;
     MediaPlayer mp;
     PowerManager.WakeLock wakeLock;
+    Button play_pause;
 
 
     private static final int RC_BARCODE_CAPTURE = 9001;
@@ -39,6 +42,7 @@ public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_speaker);
         ipAddress = findViewById(R.id.ip_address);
+        play_pause = findViewById(R.id.play_pause);
         websocketClient = new Thread(new SyncClient());
         websocketClient.start();
         mp = new MediaPlayer();
@@ -49,8 +53,8 @@ public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.On
 
         wakeLock.acquire();
 
-//        this.latencyThread = new Thread(new LatencyThread());
-//        this.latencyThread.start();
+        this.latencyThread = new Thread(new LatencyThread());
+        this.latencyThread.start();
 
 /*
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(SpeakerActivity.this);
@@ -71,8 +75,10 @@ public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.On
     public void play(View view) {
         if(mp.isPlaying()){
             mp.pause();
+            play_pause.setText("Play");
         } else {
-            mp.start();
+            onPrepared(mp);
+            play_pause.setText("Pause");
         }
     }
 
@@ -90,20 +96,16 @@ public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.On
 
     @Subscribe
     public void pauseMusic(PauseEvent e){
+        mp.pause();
         wakeLock.release();
-        if(mp.isPlaying()){
-            mp.pause();
-        }
     }
     @Subscribe
     public void playMusic(PlayEvent e){
-        wakeLock.acquire();
-       if(!mp.isPlaying()){
-           mp.seekTo(e.offset);
-           mp.start();
-           Log.d(TAG, " " + e.offset);
+        mp.seekTo(e.offset + Config.getInstance().latency / 2);
+        mp.start();
+//           Log.d(TAG, " " + e.offset);
 
-       }
+       wakeLock.acquire();
     }
     @Subscribe
     public void prepareMusic(PrepareEvent e){
@@ -137,7 +139,7 @@ public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.On
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        Log.d(TAG, "Onprepared cll");
+//        Log.d(TAG, "Onprepared cll");
         EventBus.getDefault().post(new RequestCurrentPosition());
     }
 
