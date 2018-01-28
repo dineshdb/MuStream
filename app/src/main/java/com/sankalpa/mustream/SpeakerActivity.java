@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.PlaybackParams;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
@@ -12,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.sankalpa.mustream.events.PauseEvent;
@@ -25,7 +25,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
 
-public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
+public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener{
 
     private static final String TAG = "Speaker";
     TextView ipAddress;
@@ -34,6 +34,7 @@ public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.On
     MediaPlayer mp;
     PowerManager.WakeLock wakeLock;
     Button play_pause;
+    Switch mode;
 
 
     private static final int RC_BARCODE_CAPTURE = 9001;
@@ -43,10 +44,14 @@ public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.On
         setContentView(R.layout.activity_speaker);
         ipAddress = findViewById(R.id.ip_address);
         play_pause = findViewById(R.id.play_pause);
+        mode = findViewById(R.id.microphone_switch);
         websocketClient = new Thread(new SyncClient());
         websocketClient.start();
+
         mp = new MediaPlayer();
         mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mp.setOnPreparedListener(this);
+        mp.setOnErrorListener(this);
 
         PowerManager powerManager =(PowerManager)this.getSystemService(Context.POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, ""); // PARTIAL_WAKE_LOCK Only keeps CPU on
@@ -56,16 +61,7 @@ public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.On
         this.latencyThread = new Thread(new LatencyThread());
         this.latencyThread.start();
 
-/*
-        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(SpeakerActivity.this);
-        Session session = SessionBuilder.getInstance()
-                .setAudioEncoder(SessionBuilder.AUDIO_AMRNB)
-                .setContext(getApplicationContext())
-                .setVideoEncoder(SessionBuilder.VIDEO_NONE).build();
 
-        client = new RtspClient();
-        client.setSession(session);
-*/
 //        final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(2);
 //        executor.schedule(new NetworkDiscoveryClient(), 1, TimeUnit.SECONDS );
         //this.thread = new Thread(new NetworkDiscoveryClient());
@@ -112,8 +108,6 @@ public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.On
         try {
             Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + e.music);
             mp.setDataSource(this, uri);
-            mp.setOnErrorListener(this);
-            mp.setOnPreparedListener(this);
             mp.prepareAsync();
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -125,7 +119,16 @@ public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.On
             if (resultCode == RESULT_OK) {
                 String contents = data.getStringExtra("SCAN_RESULT");
                 Config.getInstance().setIpAddress(contents);
-                EventBus.getDefault().post(new ServerAddressEvent(contents));
+                if(mode.isChecked()){
+                    try {
+                        mp.setDataSource("rtsp://" +  contents + ":" + Config.STREAM_PORT_ADDRESS + "/" );
+                        mp.prepareAsync();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    EventBus.getDefault().post(new ServerAddressEvent(contents));
+                }
                 ipAddress.setText(contents);
 
                 Log.d(TAG, "contents: " + contents);
@@ -139,8 +142,12 @@ public class SpeakerActivity extends AppCompatActivity implements MediaPlayer.On
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-//        Log.d(TAG, "Onprepared cll");
-        EventBus.getDefault().post(new RequestCurrentPosition());
+        if(mode.isChecked()){
+            Log.d(TAG, "Onprepared cll");
+            mp.start();
+        } else {
+            EventBus.getDefault().post(new RequestCurrentPosition());
+        }
     }
 
     @Override

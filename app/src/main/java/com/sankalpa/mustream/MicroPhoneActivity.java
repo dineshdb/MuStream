@@ -45,7 +45,7 @@ public class MicroPhoneActivity extends AppCompatActivity implements Session.Cal
         // Configures the SessionBuilder See this https://stackoverflow.com/questions/26405539/send-a-multicast-audio-in-rtsp-using-libstreaming-for-upstreaming-from-an-androi
         session = SessionBuilder.getInstance()
                 .setCallback(this)
-                .setAudioEncoder(SessionBuilder.AUDIO_AAC)
+                .setAudioEncoder(SessionBuilder.AUDIO_AMRNB)
                 .setContext(getApplicationContext())
 //                .setAudioQuality(AudioQuality.parseQuality("80kbps"))
 //                .setDestination("224.0.0.1")
@@ -53,7 +53,6 @@ public class MicroPhoneActivity extends AppCompatActivity implements Session.Cal
 
         // Starts the RTSP server
         this.startService(new Intent(this, RtspServer.class));
-        //session.start();
         //  startServer();
     }
 

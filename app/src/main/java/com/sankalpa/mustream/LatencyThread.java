@@ -33,7 +33,7 @@ public class LatencyThread implements Runnable {
                 }
             }
             Config.getInstance().setLatency(sum / 5);
-            Log.d(TAG, "" + sum / 5);
+            //Log.d(TAG, "" + sum / 5);
         }
     }
 }

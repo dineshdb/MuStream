@@ -28,7 +28,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 
-public class MediaPlayerActivity extends AppCompatActivity implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
+public class MediaPlayerActivity extends AppCompatActivity implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener {
     private static final String TAG = "MediaPlayer";
     private int QRcodeWidth = 500;
     MediaPlayer mp;
@@ -58,6 +58,8 @@ public class MediaPlayerActivity extends AppCompatActivity implements MediaPlaye
         mp = new MediaPlayer();
         mp.setOnErrorListener(this);
         mp.setOnPreparedListener(this);
+//        mp.setOnCompletionListener(this);
+//        mp.setLooping(true);
         mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
         Config.getInstance().setMediaPlayer(mp);
 
@@ -146,5 +148,11 @@ public class MediaPlayerActivity extends AppCompatActivity implements MediaPlaye
     public boolean onError(MediaPlayer mp, int what, int extra) {
         Log.e(TAG, "Error playing file");
         return false;
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        EventBus.getDefault().post(new PlayEvent(0));
+        Log.d(TAG, "Replaying");
     }
 }
