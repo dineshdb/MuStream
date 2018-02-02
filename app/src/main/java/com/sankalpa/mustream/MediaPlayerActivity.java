@@ -1,6 +1,8 @@
 package com.sankalpa.mustream;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -33,6 +35,7 @@ public class MediaPlayerActivity extends AppCompatActivity implements MediaPlaye
     private int QRcodeWidth = 500;
     MediaPlayer mp;
     Thread server ;
+    Intent intent;
 
     PowerManager powerManager;
     PowerManager.WakeLock wakeLock;
@@ -56,29 +59,9 @@ public class MediaPlayerActivity extends AppCompatActivity implements MediaPlaye
         server.start();
 
         mp = new MediaPlayer();
-        mp.setOnErrorListener(this);
-        mp.setOnPreparedListener(this);
-//        mp.setOnCompletionListener(this);
-//        mp.setLooping(true);
-        mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        Config.getInstance().setMediaPlayer(mp);
-
-        PowerManager powerManager =(PowerManager)this.getSystemService(Context.POWER_SERVICE);
+        powerManager =(PowerManager)this.getSystemService(Context.POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, ""); // PARTIAL_WAKE_LOCK Only keeps CPU on
-
-        try {
-            Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.wildfire);
-            mp.setDataSource(this, uri);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         wakeLock.acquire();
-        mp.prepareAsync();
-        EventBus.getDefault().post(new PrepareEvent(R.raw.wildfire));
-
-/*        this.player = new Thread(new NetworkDiscoveryServer(this));
-        this.player.start();*/
-
     }
 
     @Override
@@ -128,6 +111,34 @@ public class MediaPlayerActivity extends AppCompatActivity implements MediaPlaye
 
                 bitmap.setPixels(pixels, 0, 500, 0, 0, bitMatrixWidth, bitMatrixHeight);
         return bitmap;
+    }
+
+    public void select(View view) {
+        intent = new Intent();
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setType("audio/*");
+        startActivityForResult(intent,1);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1 && resultCode == Activity.RESULT_OK){
+            try {
+                if(mp.isPlaying()) {
+                    mp.stop();
+                }
+                mp.setOnErrorListener(this);
+                mp.setOnPreparedListener(this);
+                mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                mp.pause();
+                Uri datum = data.getData();
+                mp.setDataSource(this, datum);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            mp.prepareAsync();
+        }
     }
 
     public void stop(View view) {
